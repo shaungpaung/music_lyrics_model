@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from qdrant_client import QdrantClient
 import pickle
+from fastapi.middleware.cors import CORSMiddleware
 
 # Load trained TF-IDF vectorizer
 with open("vectorizer.pkl", "rb") as f:
@@ -21,6 +22,13 @@ if not client.collection_exists(collection_name):
 
 app = FastAPI(title="Music Recommendation API")
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 class LyricQuery(BaseModel):
     lyric: str
 
